@@ -43,19 +43,42 @@
     add-rule: [{
       server:
       '''
+        function _flatten()
+        {
+            _flat="\"$1\""
+            shift
+            while [ "$#" -gt 0 ]
+            do
+                _flat+=",\"$1\""
+                shift
+            done
+            echo "$_flat"
+        }
+      
         RULES=$HOME/rules.json
+        source commands.sh
         [[ ! -f $RULES ]] && echo "[]" > $RULES
         
         _url=""
-        _arguments=""
+        _arguments=()
+        _labels=()
+        _priority=0
 
         while [ "$#" -gt 0 ]
         do
         opt="$1"
         shift
         case "$opt" in
-          --args)
-              _arguments="$opt"
+          --arg)
+              _arguments+=("$1")
+              shift
+            ;;
+          --priority)
+              _priority="$1"
+              shift
+            ;;
+          --label)
+              _labels+=("$1")
               shift
             ;;
           *)
@@ -68,13 +91,73 @@
         done          
 
         if [[ "$_url" == "" ]]; then
-            echo -e "Usage:\ndupper exec -t $REPO_NAME add-rule [OPTIONS] GITURL"
-            echo -e "--args \"ARGS\" Dupper dup arguments."
+            cat <<-EOM
+Usage:
+  dupper exec -t $REPO_NAME add-rule [OPTIONS] GITURL
+
+Description:
+     Add rule for node-cluster.
+
+Options:
+  --args ARGS                       Dupper dup arguments.
+  --priority NUMBER                 Rule priority, default 0.
+  --label    NAME                   Node label for which to run the rule, default is ALL.
+EOM
             exit 1
         fi
         
-        inplace 
+        #inplace $RULES 
+        _rule=$(echo "[{\"url\": \"$_url\", \"priority\": $_priority, \"args\": \"${_arguments[@]}\", \"labels\":[$(_flatten ${_labels[@]})]}]") 
+        inplace $RULES jq ".+ $_rule"
+        ls-rules
       '''
     }],
+    delete-rule: [{
+      server:
+      '''      
+        RULES=$HOME/rules.json
+        source commands.sh
+
+        [[ ! -f $RULES ]] && exit 0
+        
+        _url=""
+
+        while [ "$#" -gt 0 ]
+        do
+        opt="$1"
+        shift
+        case "$opt" in
+          *)
+            if [[ -z $_url ]]
+            then
+              _url="$opt"
+            fi
+            ;;
+        esac
+        done          
+
+        if [[ "$_url" == "" ]]; then
+            cat <<-EOM
+Usage:
+  dupper exec -t $REPO_NAME delete-rule GITURL
+
+Description:
+     Delete rule for node-cluster.
+EOM
+            exit 1
+        fi
+        
+        inplace $RULES jq ".[] | select(.url!=\"$_url\") | [.]"
+        ls-rules
+      '''
+    }],
+    ls-rules: [{
+      server:
+      '''     
+        RULES=$HOME/rules.json
+        source commands.sh
+        ls-rules
+      '''
+    }]
   }
 }
