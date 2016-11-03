@@ -1,0 +1,80 @@
+{
+  dependencies: 
+  [
+    {
+      name: "linux-dependencies",
+      cmd:
+      '''
+        apt-get -y install curl wget jq vim gcc
+        curl -L https://github.com/docker/machine/releases/download/v0.7.0/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine
+        chmod +x /usr/local/bin/docker-machine
+        git clone https://github.com/nicowilliams/inplace
+        cd inplace
+        gcc inplace.c -o inplace
+        cp ./inplace /usr/local/bin/
+      '''
+    }
+  ],
+  commands: {
+    ls: [{
+      server:
+      '''
+        docker-machine ls
+      '''
+    }],
+    add-node: [{
+      server:
+      '''
+        docker-machine create $#
+      '''
+    }],    
+    remove-node: [{
+      server:
+      '''
+        docker-machine rm $#      
+      '''
+    }],
+    ls: [{
+      server:
+      '''
+        docker-machine ls
+      '''
+    }],
+    add-rule: [{
+      server:
+      '''
+        RULES=$HOME/rules.json
+        [[ ! -f $RULES ]] && echo "[]" > $RULES
+        
+        _url=""
+        _arguments=""
+
+        while [ "$#" -gt 0 ]
+        do
+        opt="$1"
+        shift
+        case "$opt" in
+          --args)
+              _arguments="$opt"
+              shift
+            ;;
+          *)
+            if [[ -z $_url ]]
+            then
+              _url="$opt"
+            fi
+            ;;
+        esac
+        done          
+
+        if [[ "$_url" == "" ]]; then
+            echo -e "Usage:\ndupper exec -t $REPO_NAME add-rule [OPTIONS] GITURL"
+            echo -e "--args \"ARGS\" Dupper dup arguments."
+            exit 1
+        fi
+        
+        inplace 
+      '''
+    }],
+  }
+}
