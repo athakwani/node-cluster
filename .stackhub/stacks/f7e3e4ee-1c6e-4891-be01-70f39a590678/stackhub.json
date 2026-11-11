@@ -1,0 +1,80 @@
+{
+  "formatVersion": 1,
+  "stack": {
+    "name": "node-cluster",
+    "description": "",
+    "isPrivate": false,
+    "router": {
+      "image": "caddy:2",
+      "command": "",
+      "args": [],
+      "environment": {},
+      "ports": [],
+      "volumes": [],
+      "secrets": []
+    },
+    "blocks": [
+      {
+        "image": "",
+        "command": "",
+        "args": [],
+        "environment": {},
+        "ports": [],
+        "volumes": [],
+        "secrets": [],
+        "id": "block-1794436734830",
+        "name": "node-cluster",
+        "shortName": "node-cluster",
+        "type": "component",
+        "repository": {
+          "host": "github.com",
+          "repositoryId": 72507886,
+          "owner": "athakwani",
+          "repo": "node-cluster",
+          "branch": "master",
+          "connectedAt": "2026-11-11T22:38:54.830Z",
+          "autoSync": true
+        },
+        "children": [
+          {
+            "image": "mysql",
+            "command": "",
+            "args": [],
+            "environment": {},
+            "ports": [],
+            "volumes": [],
+            "secrets": [],
+            "id": "block-d6aa442d-c938-4d48-b803-e192540987d8",
+            "name": "mysql",
+            "shortName": "mysql",
+            "type": "service",
+            "parentId": "block-1794436734830",
+            "children": [],
+            "networks": [],
+            "constraints": [],
+            "labels": {},
+            "createdAt": "2026-11-11T22:39:08.357Z",
+            "updatedAt": "2026-11-11T22:39:08.357Z"
+          }
+        ],
+        "networks": [],
+        "constraints": [],
+        "labels": {},
+        "createdAt": "2026-11-11T22:38:54.830Z",
+        "updatedAt": "2026-11-11T22:38:54.830Z"
+      }
+    ],
+    "github": {
+      "host": "github.com",
+      "repositoryId": 72507886,
+      "owner": "athakwani",
+      "repo": "node-cluster",
+      "branch": "master",
+      "connectedAt": "2026-11-11T22:38:54.830Z",
+      "autoSync": true
+    },
+    "tags": [],
+    "category": "web",
+    "version": "1.0.1"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "type": "service",
+  "name": "mysql",
+  "path": "/mysql",
+  "image": {
+    "name": "mysql",
+    "version": "latest"
+  },
+  "command": [],
+  "args": [],
+  "env": [],
+  "volumes": [],
+  "endpoints": [],
+  "labels": {}
+}

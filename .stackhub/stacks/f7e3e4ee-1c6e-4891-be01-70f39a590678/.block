@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "type": "component",
+  "name": "node-cluster",
+  "path": "/",
+  "image": {
+    "name": "",
+    "version": "latest"
+  },
+  "github": "https://github.com/athakwani/node-cluster/tree/master",
+  "command": [],
+  "args": [],
+  "env": [],
+  "volumes": [],
+  "endpoints": [],
+  "labels": {}
+}
